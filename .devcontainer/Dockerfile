@@ -42,3 +42,12 @@ RUN flutter doctor && flutter precache
 
 # Set working directory
 WORKDIR /workspaces
+
+# Install SSH server
+RUN apt-get update && apt-get install -y openssh-server \
+    && mkdir /var/run/sshd
+
+# Allow passwordless login for vscode user
+RUN echo "vscode ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+RUN sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+RUN service ssh start
